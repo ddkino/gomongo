@@ -15,8 +15,9 @@ import (
 	"github.com/go-chi/chi"
 )
 
-type permis struct {
-	Siret string `json:"siret"`
+type Permis struct {
+	Siret                  string `json:"siret"`
+	Codepostaledudemandeur string `json:"codepostal"`
 }
 
 type todo struct {
@@ -26,6 +27,7 @@ type todo struct {
 	Task       string    `json:"task"`
 }
 
+//noinspection ALL
 func main() {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -97,11 +99,45 @@ func main() {
 		}
 		out, err := json.Marshal(result)
 		if err != nil {
-			panic (err)
+			panic(err)
 		}
 		fmt.Println(string(out))
 
 		w.Write([]byte("eee"))
+	})
+
+	r.Get("/permislocaux/json", func(w http.ResponseWriter, r *http.Request) {
+		var results []*Permis
+		client, err := mongo.NewClient("mongodb://localhost:27017/kb")
+		if err != nil {
+			fmt.Println(err)
+		}
+		ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+		err = client.Connect(ctx)
+
+		collection := client.Database("kb").Collection("permislocaux")
+		filter := bson.D{{"region", "84"}, {"anneedepot", "2016"}}
+		cur, err := collection.Find(ctx, filter)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer cur.Close(ctx)
+		for cur.Next(ctx) {
+			var elem Permis
+			err := cur.Decode(&elem)
+			if err != nil {
+				log.Fatal(err)
+			}
+			results = append(results, &elem)
+			//fmt.Println(elem)
+		}
+		output, err := json.Marshal(results)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Header().Set("Context-Type", "application/json")
+		w.Write(output)
 	})
 
 	r.Get("/test/id", func(w http.ResponseWriter, r *http.Request) {
@@ -124,11 +160,30 @@ func main() {
 		}
 		out, err := json.Marshal(result)
 		if err != nil {
-			panic (err)
+			panic(err)
 		}
 		fmt.Println(string(out))
 
 		w.Write([]byte("eee"))
+	})
+
+	type Profile struct {
+		Name    string
+		Hobbies []string
+	}
+	r.Get("/json", func(w http.ResponseWriter, r *http.Request) {
+
+		profile := Profile{
+			Name:    "dede",
+			Hobbies: []string{"aaa", "ppp"},
+		}
+
+		output, err := json.Marshal(profile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		w.Header().Set("Context-Type", "application/json")
+		w.Write(output)
 	})
 
 	http.ListenAndServe(":3333", r)
