@@ -8,16 +8,24 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/go-chi/chi/middleware"
 	"github.com/mongodb/mongo-go-driver/bson"
+	"github.com/mongodb/mongo-go-driver/bson/primitive"
 	"github.com/mongodb/mongo-go-driver/mongo"
 
 	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
 )
 
+/**
+how to convert ObjectID:
+- declare type = primitive.ObjectID from bson/primitive
+- use tag declaration bson:"_id"
+- json tags only for mapping presentation
+*/
 type Permis struct {
-	Siret                  string `json:"siret"`
-	Codepostaledudemandeur string `json:"codepostal"`
+	ID                     primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
+	Siret                  string             `json:"siret"`
+	Codepostaledudemandeur string             `json:"codepostal"`
 }
 
 type todo struct {
@@ -29,6 +37,7 @@ type todo struct {
 
 //noinspection ALL
 func main() {
+	fmt.Println("server is running ...")
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
