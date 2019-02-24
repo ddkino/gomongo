@@ -6,6 +6,6 @@ import (
 
 func Router(r chi.Router) {
 	r.Get("/json", handleProfileGetJson)
-	r.Get("/id", handleProfileGetById)
+	r.Get("/id", handleProfileGetByName)
 	r.Post("/", handleProfileInsertOne)
 }

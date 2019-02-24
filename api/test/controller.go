@@ -26,7 +26,7 @@ func handleProfileGetJson(writer http.ResponseWriter, request *http.Request) {
 	writer.Write(output)
 }
 
-func handleProfileGetById(writer http.ResponseWriter, request *http.Request) {
+func handleProfileGetByName(writer http.ResponseWriter, request *http.Request) {
 	client, err := mongo.NewClient("mongodb://localhost:27017/kb")
 	if err != nil {
 		fmt.Println(err)
@@ -48,10 +48,8 @@ func handleProfileGetById(writer http.ResponseWriter, request *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	//fmt.Println(string(output))
 	writer.Header().Set("Context-Type", "application/json")
 	writer.Write(output)
-	//w.Write([]byte("eee"))
 }
 
 func handleProfileInsertOne(writer http.ResponseWriter, request *http.Request) {
