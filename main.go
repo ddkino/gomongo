@@ -8,8 +8,9 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 
-	"hellomongo/api/permislocaux"
-	"hellomongo/api/test"
+	"kbconcuradmin/api/programmesneufs"
+	"kbconcuradmin/api/test"
+	kbmiddlewares "kbconcuradmin/middlewares"
 )
 
 type todo struct {
@@ -19,21 +20,28 @@ type todo struct {
 	Task       string    `json:"task"`
 }
 
+const PORT = "3333"
+
 //noinspection ALL
 func main() {
-	fmt.Println("server is running ...")
+	fmt.Println("server is running on..." + PORT)
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
-	// permislocaux CRUD
-	r.Route("/api/permislocaux", permislocaux.Router)
-	// test CRUD + JSON on collection "test" etc ...
+	r.Use(kbmiddlewares.CorsMiddleware.Handler)
+	r.Use(middleware.SetHeader("Context-Type", "application/json"))
+	// permislocaux
+	// r.Route("/api/permislocaux", permislocaux.Router)
+
+	// programmesneufs
+	r.Route("/api/programmesneufs", programmesneufs.Router)
+	// test JSON on collection "test" etc ...
 	r.Route("/api/test", test.Router)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("hello world"))
 	})
 
-	http.ListenAndServe(":3333", r)
+	http.ListenAndServe(":"+PORT, r)
 
 }

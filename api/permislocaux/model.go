@@ -1,6 +1,6 @@
 package permislocaux
 
-import "github.com/mongodb/mongo-go-driver/bson/primitive"
+import "go.mongodb.org/mongo-driver/bson/primitive"
 
 
 /**
@@ -12,5 +12,5 @@ how to convert ObjectID:
 type Permislocaux struct {
 	ID                     primitive.ObjectID `bson:"_id,omitempty" json:"_id,omitempty"`
 	Siret                  string             `json:"siret"`
-	Codepostaledudemandeur string             `string:"codepostal"`
+	Codepostaledudemandeur string             `json:"codepostal"`
 }

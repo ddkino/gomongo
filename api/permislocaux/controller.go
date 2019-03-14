@@ -8,13 +8,14 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mongodb/mongo-go-driver/bson"
-	"github.com/mongodb/mongo-go-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	optionsMongo "go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func HandlePermislocauxGetAll(writer http.ResponseWriter, request *http.Request) {
 	var results []*Permislocaux
-	client, err := mongo.NewClient("mongodb://localhost:27017/kb")
+	client, err := mongo.NewClient(optionsMongo.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -48,7 +49,7 @@ func HandlePermislocauxGetAll(writer http.ResponseWriter, request *http.Request)
 }
 
 func HandlePermislocauxGetById(writer http.ResponseWriter, request *http.Request) {
-	client, err := mongo.NewClient("mongodb://localhost:27017/kb")
+	client, err := mongo.NewClient(optionsMongo.Client().ApplyURI("mongodb://localhost:27017"))
 	if err != nil {
 		fmt.Println(err)
 	}
