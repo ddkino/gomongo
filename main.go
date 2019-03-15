@@ -29,7 +29,6 @@ func main() {
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
 	r.Use(kbmiddlewares.CorsMiddleware.Handler)
-	r.Use(middleware.SetHeader("Context-Type", "application/json"))
 	// permislocaux
 	// r.Route("/api/permislocaux", permislocaux.Router)
 

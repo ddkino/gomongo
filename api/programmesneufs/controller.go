@@ -140,7 +140,8 @@ func HandleProgrammesneufsFindByDate(writer http.ResponseWriter, request *http.R
 	if err != nil {
 		log.Fatal(err)
 	}
-	writer.Header().Set("Context-Type", "application/json; charset=utf-8")
+	writer.Header().Set("Content-Type", "application/json; charset=utf-8")
+	writer.WriteHeader(200)
 	writer.Write(output)
 }
 
