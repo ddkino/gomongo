@@ -54,8 +54,19 @@ func HandleProgrammesneufsFindByDate(writer http.ResponseWriter, request *http.R
 	}
 
 	var tMin, tMax time.Time
-	var first int64
+	var first, maxdistance int64
 	var lon, lat float64
+
+	if _, ok := msg["maxdistance"]; ok {
+		maxdistance, err = strconv.ParseInt(msg["maxdistance"].(string), 10, 64)
+		if err != nil {
+			maxdistance = 100000
+		} else {
+			maxdistance = maxdistance * 1000
+		}
+	} else {
+		maxdistance = 100000
+	}
 
 	if _, ok := msg["lon"]; ok {
 		lon, err = strconv.ParseFloat(msg["lon"].(string), 64)
@@ -116,7 +127,7 @@ func HandleProgrammesneufsFindByDate(writer http.ResponseWriter, request *http.R
 					"type":        "Point",
 					"coordinates": []float64{lon, lat},
 				},
-				"$maxDistance": 100000,
+				"$maxDistance": maxdistance,
 			},
 		},
 	}
