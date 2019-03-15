@@ -34,6 +34,8 @@
 
 
 ### mongodb reformat data
+- create index created_at
+`db.getCollection('programmesseloger').createIndex({"created_at": 1})`
 - create index geoJson
 `db.getCollection('programmesseloger').createIndex({"geojson": "2dsphere"})`
 
@@ -76,3 +78,5 @@ db.getCollection('programmesseloger_copy').find({
         }
     }).limit(1000)
 ```
+### mongo import CSV 
+`mongoimport --db kb --collection open_siret_mars2019 --type csv StockEtablissement_utf8.csv`
